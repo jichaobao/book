@@ -1,0 +1,27 @@
+{% extends './layout.html' %}
+{% block title %}新增新闻{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="/styles/index.css">
+{% endblock %}
+{% block content %}
+    {% include "../components/news/add.html" %}
+{% endblock %}
+{% block scripts %}
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.js"></script>
+    <script type="module">
+        console.log("我支持moudule");
+        import("/scripts/add.js").then((_)=>{
+            const create = new _.default;
+            create.fn();
+        });
+    </script>
+    <script type="nomodule" src="https://cdn.staticfile.org/systemjs/3.0.1/system.js"></script>
+    <script type="nomodule">
+        System.import("/scripts/add-bundle.js").then((_)=>{
+            const create = new _.default;
+            create.fn();
+        });
+    </script>
+{% endblock %}
