@@ -16,9 +16,10 @@
             const create = new _.default;
             create.fn();
         });
-    </script>
+    </script>  
     <script type="nomodule" src="https://cdn.staticfile.org/systemjs/3.0.1/system.js"></script>
     <script type="nomodule">
+        //stytem.js用法非常简单，下面的这个文件需要babel用插件编译
         System.import("/scripts/add-bundle.js").then((_)=>{
             const create = new _.default;
             create.fn();

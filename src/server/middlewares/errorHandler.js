@@ -1,3 +1,7 @@
+/**
+ * 
+ * 
+ */
 const errorHandler={
     error(app,logger){
         app.use(async (ctx,next) => {

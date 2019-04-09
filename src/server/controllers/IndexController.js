@@ -8,14 +8,14 @@ class IndexController{
             //SSR直接服务端渲染，灌到前台，crs是向后端发ajax，然后用js在本地操作dom
             const index = new Index();
             const result = await index.getData();
-            ctx.body=await ctx.render("index",{
+            ctx.body=await ctx.render("books/pages/list",{
                 data:result.data
             });
         }
     }
     actionAdd(){
         return  async(ctx,next) => {
-            ctx.body=await ctx.render("add");
+            ctx.body=await ctx.render("books/pages/add");
         }
     }
     actionSave(){
