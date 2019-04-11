@@ -1,4 +1,5 @@
 const Index = require("../models/index");
+import cheerio from "cheerio";
 const {URLSearchParams} = require("url");
 class IndexController{
     constructor(){}
@@ -8,14 +9,39 @@ class IndexController{
             //SSR直接服务端渲染，灌到前台，crs是向后端发ajax，然后用js在本地操作dom
             const index = new Index();
             const result = await index.getData();
-            ctx.body=await ctx.render("books/pages/list",{
+            const html =await ctx.render("books/pages/list",{
                 data:result.data
             });
+            if(ctx.requset.header["x-pjax"]){
+                const $ =  cheerio.load(html);
+                ctx.body = $("#js-hooks-data");
+            }
+            else{
+                ctx.body=html;
+            }
         }
     }
     actionAdd(){
         return  async(ctx,next) => {
-            ctx.body=await ctx.render("books/pages/add");
+            const html =await ctx.render("books/pages/add");
+            if(ctx.requset.header["x-pjax"]){
+                const $ =  cheerio.load(html);
+                let _result="";//csr
+                $(".pjaxcontent").each(function(){
+                    _result += $(this).html();
+                });
+                
+                $(".layload-css").each(function(){
+                    _result += $(this).html();
+                });
+                $(".layload-js").each(function(){
+                    _result += `<script src="${$(this).attr('src')}"></script>`;
+                });
+            }
+            else{
+                ctx.body=html;
+            }
+            
         }
     }
     actionSave(){

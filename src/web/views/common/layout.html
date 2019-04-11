@@ -4,15 +4,23 @@
     <meta charset="utf-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.5/css/bootstrap.css">
-    <link rel="stylesheet" href="/styles/common.css">
     {% block head %}{% endblock %}
 </head>
 <body>
     {% block navigation %}{% endblock %}
-    <div class="container">
+    <div class="container" id="app">
             {% block content %}{% endblock %}
     </div>
-    <script src="/scripts/common.js"></script>
+    <script src="https://cdn.staticfile.org/x-tag/2.0.9-alpha/x-tag-raw.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.staticfile.org/jquery.pjax/2.0.1/jquery.pjax.js"></script>
+    <script src="https://cdn.staticfile.org/quicklink/1.0.0/quicklink.umd.js"></script>
+    <script>
+        quicklink({
+            urls:["scripts/books-add.bundule.js"]
+        });
+        $(document).pjax("a","#app");
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

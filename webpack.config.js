@@ -42,7 +42,7 @@ let webpackconfig = {
                     ]
                   }
                 ]
-         }
+         },
         // module: {
         //         rules: [
         //           {
