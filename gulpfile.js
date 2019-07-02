@@ -28,7 +28,12 @@ function buildprod(){
                 babelrc:false,//很重要，让外面的babel不生效，里面的这个生效
                ignore:["./src/server/config/*.js"],
                 "plugins":[
-                        ['transform-es2015-modules-commonjs']
+                        [ '@babel/plugin-proposal-decorators',{
+                                "legacy":true
+                        }]
+                        [
+                                'transform-es2015-modules-commonjs'
+                        ]
                 ]
         }))
         .pipe(gulp.dest("dist"));

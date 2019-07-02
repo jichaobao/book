@@ -7,9 +7,28 @@ const serve=require("koa-static");
 const errorHandle=require("./middlewares/errorHandler");
 const log4js=require("log4js");
 const config = require("./config");
+import {
+  asClass,
+  asValue,
+  Lifetime,
+  createContainer
+} from "awilix";
+import {
+  scopePerRequest,
+  loadControllers
+} from "awilix-koa";
 //process.env.NODE_ENV ,这个值通过cross-env设置
 //访问静态资源
 app.use(serve(config.staticDir));
+const container = createContainer();
+//把所有的services注入到容器
+container.loadModules([__dirname+"/services/*.js"],{
+  formatName:"camelCase",
+  registerOptions:{
+    lifetime:Lifetime.SCOPED
+  }
+});
+app.use(scopePerRequest(container));
 //swig
 app.context.render = co.wrap(render({
     root: path.join(config.viewDir),
@@ -29,6 +48,10 @@ app.context.render = co.wrap(render({
 //注入我们的路由
 errorHandle.error(app,logger);
 require("./controllers")(app);
+//自动装载路由
+app.use(loadControllers(__dirname+"./controllers/*.js"),{
+  cwd:__dirname
+});
 app.listen(config.port,()=>{
     console.log("项目以成功启动，端口3000 ");
 });

@@ -1,14 +1,21 @@
-const Index = require("../models/index");
 import cheerio from "cheerio";
+import {
+    route,
+    GET
+} from "awilix-koa";
 const {URLSearchParams} = require("url");
+@route("/index")
 class IndexController{
-    constructor(){}
-    actionIndex(){
-        return  async(ctx,next) => {
+    constructor({indexService}){
+        this.indexService = indexService;
+    }
+    @route("/list")
+    @GET()
+    async actionIndex(ctx,next){
             //ctx.body = "hello";
             //SSR直接服务端渲染，灌到前台，crs是向后端发ajax，然后用js在本地操作dom
             const index = new Index();
-            const result = await index.getData();
+            const result = await this.indexService.getData();
             const html =await ctx.render("books/pages/list",{
                 data:result.data
             });
@@ -19,10 +26,10 @@ class IndexController{
             else{
                 ctx.body=html;
             }
-        }
     }
-    actionAdd(){
-        return  async(ctx,next) => {
+    @route("/add")
+    @GET()
+    async actionAdd(ctx,next){
             const html =await ctx.render("books/pages/add");
             if(ctx.requset.header["x-pjax"]){
                 const $ =  cheerio.load(html);
@@ -41,11 +48,10 @@ class IndexController{
             else{
                 ctx.body=html;
             }
-            
-        }
     }
-    actionSave(){
-        return  async(ctx,next) => {
+    @route("/save")
+    @GET()
+    async actionSave(ctx,next){
             const index = new Index();
             //构建表单的形式，formdata
             const paramas =new URLSearchParams();
@@ -56,7 +62,5 @@ class IndexController{
             });
             ctx.body = result;
         }
-        
-    }
 }
 module.exports = IndexController;
